@@ -8,32 +8,18 @@
 ## Estrutura de Pastas
 
 ```
-specs/
-├── README.md                   ← este arquivo
-│
-├── 00-foundation/
-│   ├── ARCHITECTURE.md         ← visão geral da arquitetura
-│   ├── DATA-MODELS.md          ← tipos e schemas centrais
-│   ├── API-CONTRACTS.md        ← contratos de todos os endpoints
-│   └── INFRA.md                ← stack, variáveis de ambiente, deploy
-│
-├── 01-onboarding/
-│   ├── SPEC.md                 ← spec completa da feature F1
-│   ├── FLOWS.md                ← fluxos e estados
-│   └── TESTS.md                ← casos de teste e critérios de aceite
-│
-├── 02-user-story-linter/
-│   ├── SPEC.md                 ← spec completa da feature F2
-│   ├── LINTER-RULES.md         ← regras de compliance e semáforo
-│   └── TESTS.md
-│
-├── 03-feedback/
-│   ├── SPEC.md                 ← spec completa da feature F3
-│   └── TESTS.md
-│
-└── 04-shared/
-    ├── COMPONENTS.md           ← componentes de UI reutilizáveis
-    └── ERRORS.md               ← catálogo de erros padronizados
+docs/
+├── prd/
+│   ├── AI_Project_Mentor_PRD_MVP.md ← Visão geral, objetivos, MVP
+│   └── Documento-pre-PRD.md         ← Draft inicial / Pré-PRD
+├── planning/
+│   └── SPRINT-PLAN.md               ← Planejamento das Sprints
+└── specs/
+    ├── 00-foundation/               ← Arquitetura, Contratos API, Prompts e Infra
+    ├── 01-onboarding/               ← Especificações de Onboarding
+    ├── 02-user-story-linter/        ← Especificações do Gerador e Linter
+    ├── 03-feedback/                 ← Especificações do Sistema de Feedback
+    └── 04-shared/                   ← Componentes UI e Erros padrão
 ```
 
 ---
@@ -42,18 +28,18 @@ specs/
 
 ### Ordem de leitura obrigatória antes de codar qualquer feature:
 
-1. `00-foundation/ARCHITECTURE.md` — entenda o sistema como um todo
-2. `00-foundation/DATA-MODELS.md` — internalize os tipos antes de criar qualquer coisa
-3. `00-foundation/API-CONTRACTS.md` — os contratos são a lei; não desvie sem atualizar a spec
-4. `[feature]/SPEC.md` — a spec da feature que você vai construir
-5. `[feature]/TESTS.md` — escreva os testes antes da implementação
+1. `docs/specs/00-foundation/ARCHITECTURE.md` — entenda o sistema como um todo
+2. `docs/specs/00-foundation/DATA-MODELS.md` — internalize os tipos antes de criar qualquer coisa
+3. `docs/specs/00-foundation/API-CONTRACTS.md` — os contratos são a lei; não desvie sem atualizar a spec
+4. `docs/specs/[feature]/SPEC.md` — a spec da feature que você vai construir
+5. `docs/specs/[feature]/TESTS.md` — escreva os testes antes da implementação
 
 ### Convenções
 
 - **Spec antes de código:** nenhuma implementação começa sem spec aprovada
 - **Tipos explícitos:** TypeScript estrito em todo o projeto (`strict: true`)
 - **Nenhum `any`:** se você precisar de `any`, é sinal de que a spec está incompleta
-- **Erros são contratos:** todos os erros possíveis estão documentados em `04-shared/ERRORS.md`
+- **Erros são contratos:** todos os erros possíveis estão documentados em `docs/specs/04-shared/ERRORS.md`
 - **Um endpoint, uma responsabilidade:** nenhum endpoint faz mais do que o seu nome indica
 
 ---
