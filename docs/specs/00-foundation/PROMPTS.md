@@ -22,7 +22,7 @@
 
 **Arquivo:** `lib/prompts/onboarding.prompt.ts`
 **Endpoint:** `POST /api/session/start`
-**Modelo:** `claude-sonnet-4-5`
+**Modelo:** `gemini-1.5-pro`
 **Parâmetros:** `max_tokens: 400`, `temperature: 0.5`, `stream: true`
 
 ```typescript
@@ -89,7 +89,7 @@ ao seu contexto de aquisição.
 
 **Arquivo:** `lib/prompts/story.prompt.ts`
 **Endpoint:** `POST /api/story/generate`
-**Modelo:** `claude-sonnet-4-5`
+**Modelo:** `gemini-1.5-pro`
 **Parâmetros:** `max_tokens: 1200`, `temperature: 0.3`, `stream: true`
 
 ```typescript
@@ -223,7 +223,7 @@ export function parseStoryOutput(raw: string): Omit<UserStory, 'id' | 'sessionId
 
 **Arquivo:** `lib/prompts/linter.prompt.ts`
 **Endpoint:** `POST /api/story/lint`
-**Modelo:** `claude-sonnet-4-5`
+**Modelo:** `gemini-1.5-pro`
 **Parâmetros:** `max_tokens: 800`, `temperature: 0.1`, `stream: false`
 
 > `temperature: 0.1` — o mais baixo possível. O linter precisa ser determinístico e conservador.
@@ -347,7 +347,7 @@ export function parseLintOutput(raw: string): LintResult {
 
 **Arquivo:** `lib/prompts/refinement.prompt.ts`
 **Endpoint:** `POST /api/feedback` (disparo interno)
-**Modelo:** `claude-sonnet-4-5`
+**Modelo:** `gemini-1.5-pro`
 **Parâmetros:** `max_tokens: 800`, `temperature: 0.4`, `stream: true`
 
 ```typescript
@@ -416,7 +416,7 @@ Não mencione que recebeu feedback negativo. Apenas entregue a versão melhorada
 
 **Arquivo:** `lib/prompts/chat.prompt.ts`
 **Endpoint:** `POST /api/chat/message`
-**Modelo:** `claude-sonnet-4-5`
+**Modelo:** `gemini-1.5-pro`
 **Parâmetros:** `max_tokens: 600`, `temperature: 0.4`, `stream: true`
 
 ```typescript
@@ -451,7 +451,7 @@ VOCÊ NUNCA:
 ## Testando Prompts Localmente
 
 ```bash
-# Script para testar um prompt contra a API da Anthropic
+# Script para testar um prompt contra a API da Google Gemini
 # sem precisar rodar o servidor Next.js
 
 npx ts-node scripts/test-prompt.ts --prompt onboarding --context '{"squad":"Credit Cards","functionalityType":"parcelamento","currentPain":"não sei quais critérios de compliance usar"}'
@@ -459,10 +459,10 @@ npx ts-node scripts/test-prompt.ts --prompt onboarding --context '{"squad":"Cred
 
 ```typescript
 // scripts/test-prompt.ts
-import Anthropic from '@anthropic-ai/sdk'
+import Google Gemini from '@Google Gemini-ai/sdk'
 import { buildOnboardingPrompt } from '../lib/prompts/onboarding.prompt'
 
-const client = new Anthropic()
+const client = new Google Gemini()
 
 async function main() {
   const context = JSON.parse(process.argv[4]) as SessionContext
@@ -472,7 +472,7 @@ async function main() {
   console.log('\n=== OUTPUT ===')
 
   const stream = client.messages.stream({
-    model: 'claude-sonnet-4-5',
+    model: 'gemini-1.5-pro',
     max_tokens: 400,
     temperature: 0.5,
     messages: [{ role: 'user', content: prompt }],

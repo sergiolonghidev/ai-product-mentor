@@ -16,7 +16,7 @@
 | `STORY_NOT_FOUND` | 404 | storyId não existe | "Story não encontrada." |
 | `LINT_ALREADY_COMPLETE` | 409 | Linter já rodou para esta story | "Esta story já foi verificada." |
 | `FEEDBACK_ALREADY_EXISTS` | 409 | Feedback duplicado | "Você já avaliou esta resposta." |
-| `LLM_UNAVAILABLE` | 503 | Claude API timeout ou error | "O mentor está temporariamente indisponível. Tente novamente em alguns instantes." |
+| `LLM_UNAVAILABLE` | 503 | Gemini API timeout ou error | "O mentor está temporariamente indisponível. Tente novamente em alguns instantes." |
 | `REFINEMENT_LIMIT_REACHED` | 422 | > 3 refinamentos por mensagem | "Limite de refinamentos atingido para esta resposta." |
 | `INTERNAL_ERROR` | 500 | Erro não tratado | "Algo deu errado. Nossa equipe foi notificada." |
 

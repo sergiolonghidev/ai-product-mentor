@@ -53,7 +53,7 @@ Inicia uma nova sessão após o onboarding. Salva o contexto do PM.
 | Code | HTTP | Quando |
 |------|------|--------|
 | `VALIDATION_ERROR` | 400 | Body inválido |
-| `LLM_UNAVAILABLE` | 503 | Claude API offline |
+| `LLM_UNAVAILABLE` | 503 | Gemini API offline |
 
 ---
 
@@ -110,7 +110,7 @@ data: {}
 | `SESSION_NOT_FOUND` | 404 | sessionId inválido |
 | `SESSION_ENDED` | 409 | sessão já encerrada |
 | `VALIDATION_ERROR` | 400 | Body inválido |
-| `LLM_UNAVAILABLE` | 503 | Claude API offline |
+| `LLM_UNAVAILABLE` | 503 | Gemini API offline |
 
 ---
 

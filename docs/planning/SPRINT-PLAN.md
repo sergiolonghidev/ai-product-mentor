@@ -22,7 +22,7 @@
 - [ ] **[1pt]** Criar seed script com 1 sessão de exemplo para desenvolvimento
 
 ### LLM
-- [ ] **[2pt]** Criar `lib/llm/client.ts` — wrapper do Anthropic SDK com tratamento de timeout e retry
+- [ ] **[2pt]** Criar `lib/llm/client.ts` — wrapper do Google Gen AI SDK com tratamento de timeout e retry
 - [ ] **[1pt]** Criar `scripts/test-prompt.ts` — script local de teste de prompts
 - [ ] **[2pt]** Implementar `lib/prompts/onboarding.prompt.ts` + testar com 5 inputs
 
@@ -30,7 +30,7 @@
 - [ ] **[2pt]** Criar `lib/playbook/bcb-rules.md` com as 6 regras do `LINTER-RULES.md`
 - [ ] **[1pt]** Criar `lib/playbook/loader.ts` que filtra regras por `functionalityType`
 
-**Critério de conclusão:** `POST` manual para Anthropic API via script retorna resposta de onboarding coerente para 3 inputs diferentes.
+**Critério de conclusão:** `POST` manual para Gemini API via script retorna resposta de onboarding coerente para 3 inputs diferentes.
 
 ---
 

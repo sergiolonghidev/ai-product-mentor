@@ -80,7 +80,7 @@ E o chip "Fatura" ainda está selecionado
 
 ### CT-04: Erro de LLM
 ```
-DADO que a API da Anthropic está indisponível
+DADO que a API da Google Gemini está indisponível
 QUANDO o PM conclui as 3 perguntas
 ENTÃO vê uma mensagem de erro amigável (não stack trace)
 E vê um botão "Tentar novamente"

@@ -7,8 +7,8 @@
 ```bash
 # .env.local (nunca commitar)
 
-# Anthropic
-ANTHROPIC_API_KEY=sk-ant-...
+# Google Gemini
+Google Gemini_API_KEY=AIzaSy...
 
 # Banco de dados (Supabase)
 DATABASE_URL=postgresql://...
@@ -58,7 +58,7 @@ vercel --prod                   # deploy manual se necessário
 
 | Parâmetro | Valor MVP | Motivo |
 |-----------|-----------|--------|
-| Model | `claude-sonnet-4-5` | Custo/performance balanceado |
+| Model | `gemini-1.5-pro` | Custo/performance balanceado |
 | Max tokens output | 1500 | Evita respostas longas demais |
 | Temperature | 0.3 | Respostas mais consistentes (compliance) |
 | Timeout | 30s | Acima disso, retorna erro gracioso |

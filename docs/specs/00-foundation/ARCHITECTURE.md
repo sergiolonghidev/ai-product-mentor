@@ -39,7 +39,7 @@ Zod (validação de inputs)
 
 ### LLM & IA
 ```
-Anthropic Claude API (claude-sonnet-4-5 ou superior)
+Google Gemini Gemini API (gemini-1.5-pro ou superior)
 Prompt templates em arquivos .ts separados (não hardcoded em handlers)
 ```
 
@@ -86,8 +86,8 @@ Supabase (Postgres + Auth)
            ┌───────────────┼───────────────┐
            ▼               ▼               ▼
    ┌───────────────┐ ┌──────────┐ ┌──────────────┐
-   │  Anthropic    │ │ Postgres │ │  Playbook    │
-   │  Claude API   │ │(Supabase)│ │  (JSON/MD    │
+   │  Google Gemini    │ │ Postgres │ │  Playbook    │
+   │  Gemini API   │ │(Supabase)│ │  (JSON/MD    │
    │               │ │          │ │   no repo)   │
    └───────────────┘ └──────────┘ └──────────────┘
 ```
@@ -133,7 +133,7 @@ ai-project-mentor/
 │   │   ├── bcb-rules.md
 │   │   └── loader.ts
 │   ├── llm/
-│   │   └── client.ts             ← wrapper do Anthropic SDK
+│   │   └── client.ts             ← wrapper do Google Gen AI SDK
 │   └── validators/
 │       └── schemas.ts            ← schemas Zod reutilizáveis
 │
