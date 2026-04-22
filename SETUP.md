@@ -12,7 +12,7 @@
 | Node.js | 20.x | `node --version` |
 | npm | 10.x | `npm --version` |
 | Git | 2.x | `git --version` |
-| Conta Anthropic | API key ativa | console.anthropic.com |
+| Conta Google Gemini | API key ativa | console.Google Gemini.com |
 | Conta Supabase | Projeto criado | supabase.com |
 
 ---
@@ -36,8 +36,8 @@ cp .env.example .env.local
 Edite `.env.local` com seus valores:
 
 ```bash
-# Anthropic — obter em console.anthropic.com/settings/api-keys
-ANTHROPIC_API_KEY=sk-ant-api03-...
+# Google Gemini — obter em console.Google Gemini.com/settings/api-keys
+Google Gemini_API_KEY=AIzaSyapi03-...
 
 # Supabase — obter em Settings > Database > Connection string
 DATABASE_URL=postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
@@ -190,7 +190,7 @@ npx ts-node prisma/seed.ts
 
 | Problema | Causa provável | Solução |
 |----------|----------------|---------|
-| `Error: ANTHROPIC_API_KEY is not set` | .env.local não configurado | Verificar passo 2 |
+| `Error: Google Gemini_API_KEY is not set` | .env.local não configurado | Verificar passo 2 |
 | `Error: Can't reach database server` | DATABASE_URL incorreta | Verificar connection string no Supabase |
 | `PrismaClientInitializationError` | Prisma Client não gerado | Rodar `npx prisma generate` |
 | Streaming não aparece no browser | ENABLE_STREAMING=false | Verificar .env.local |
