@@ -45,15 +45,16 @@ Prompt templates em arquivos .ts separados (não hardcoded em handlers)
 
 ### Banco de Dados
 ```
-Postgres (Supabase para MVP — zero ops)
-Prisma ORM
+Postgres (Supabase hosteado localmente via Kubernetes)
+@supabase/supabase-js (Client API / PostgREST)
 Tabelas: Session, Message, Feedback, UserStory
 ```
 
 ### Infra
 ```
-Vercel (deploy do Next.js)
-Supabase (Postgres + Auth)
+Kubernetes Local (cluster próprio)
+Next.js app empacotado em Docker
+Supabase local em containers (Postgres + Auth + Studio)
 ```
 
 ---
@@ -148,8 +149,9 @@ ai-project-mentor/
 │   └── feedback/
 │       └── route.ts
 │
-├── prisma/
-│   └── schema.prisma
+├── supabase/
+│   ├── migrations/               ← DDL SQL puro (tabelas)
+│   └── config.toml               ← Configuração do Supabase local
 │
 ├── specs/                        ← este repositório de specs
 │
@@ -162,9 +164,9 @@ ai-project-mentor/
 ## Decisões Arquiteturais Chave (ADRs)
 
 ### ADR-001: Monorepo Next.js (frontend + backend juntos)
-**Decisão:** Frontend e API routes no mesmo repositório Next.js.
-**Motivo:** Reduz complexidade de deploy para o MVP; um único `vercel deploy` sobe tudo.
-**Trade-off:** Quando o produto escalar, o backend pode ser extraído para um serviço separado.
+**Decisão:** Frontend e API routes no mesmo repositório Next.js, com tudo empacotado em um único container Docker.
+**Motivo:** Reduz complexidade de deploy para o MVP; um único deploy no Kubernetes sobe todo o app.
+**Trade-off:** Quando o produto escalar, o backend pode ser extraído para um serviço separado em containers diferentes.
 
 ### ADR-002: Playbook como arquivos Markdown no repositório
 **Decisão:** As regras regulatórias ficam em arquivos `.md` em `lib/playbook/`, não em banco.
@@ -185,3 +187,8 @@ ai-project-mentor/
 **Decisão:** No Alpha, feedback é salvo com `session_id` anônimo. Auth completo só no Beta.
 **Motivo:** Reduz fricção de onboarding no Alpha; simplifica stack inicial.
 **Trade-off:** Dados de feedback no Alpha são menos rastreáveis por usuário.
+
+### ADR-006: Acesso ao Banco de Dados via Supabase Client (não Prisma)
+**Decisão:** Todo acesso ao banco de dados será feito através da biblioteca nativa `@supabase/supabase-js` via PostgREST, abolindo o Prisma ORM.
+**Motivo:** Evita a sobrecarga do engine do Prisma, facilita o reaproveitamento das políticas de segurança (RLS - Row Level Security) caso necessárias no futuro e unifica o ecossistema com o Auth do Supabase.
+**Trade-off:** Escrever migrações em SQL puro (na pasta `supabase/migrations`) exige mais conhecimento da sintaxe do PostgreSQL do que a linguagem descritiva do Prisma. O TypeScript precisará ser gerado manualmente via CLI (`npx supabase gen types`).

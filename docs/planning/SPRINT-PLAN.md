@@ -13,13 +13,13 @@
 - [ ] **[2pt]** Criar repositório Next.js 14 com TypeScript strict + Tailwind + shadcn/ui
 - [ ] **[1pt]** Configurar ESLint + Prettier + Husky (pre-commit)
 - [ ] **[1pt]** Configurar variáveis de ambiente (`.env.local` + `.env.example`)
-- [ ] **[1pt]** Deploy inicial na Vercel (pipeline CI/CD via GitHub Actions)
+- [ ] **[2pt]** Criar Dockerfile e Manifestos Kubernetes (Deploy, Service)
 
 ### Banco de Dados
-- [ ] **[2pt]** Criar projeto no Supabase + configurar `DATABASE_URL`
-- [ ] **[2pt]** Escrever `prisma/schema.prisma` com as 4 tabelas (Session, Message, UserStory, Feedback)
-- [ ] **[1pt]** Rodar `prisma db push` e validar tabelas no dashboard Supabase
-- [ ] **[1pt]** Criar seed script com 1 sessão de exemplo para desenvolvimento
+- [ ] **[1pt]** Inicializar projeto Supabase local (`npx supabase init` e `npx supabase start`)
+- [x] **[2pt]** Criar a migração inicial executando `npx supabase migration new initial_schema` e inserir o DDL das 4 tabelas (já criado no repositório em `supabase/migrations/20240505000000_initial_schema.sql`)
+- [ ] **[1pt]** Gerar tipos TypeScript localmente (`npx supabase gen types`) e configurar o `@supabase/supabase-js`
+- [ ] **[1pt]** Criar arquivo `supabase/seed.sql` com 1 sessão de exemplo para desenvolvimento
 
 ### LLM
 - [ ] **[2pt]** Criar `lib/llm/client.ts` — wrapper do Google Gen AI SDK com tratamento de timeout e retry

@@ -112,6 +112,10 @@ type UserStory = {
 
   // Resultado do linter (preenchido assincronamente)
   lintResult?: LintResult
+
+  // Integração Linear (A User Story e todos os dados são persistidos no banco Supabase independente da exportação)
+  linearIssueId?: string        // ID interno gerado pela API do Linear
+  linearIssueUrl?: string       // URL pública para acesso ao card no Linear
 }
 
 type AcceptanceCriterion = {
@@ -221,75 +225,53 @@ export const SubmitFeedbackSchema = z.object({
 
 ---
 
-## Schema do Banco (Prisma)
+## Schema do Banco (Supabase SQL)
 
-```prisma
-// prisma/schema.prisma
+As migrações ficarão dentro de `supabase/migrations/` em arquivos SQL puro. Os tipos do TypeScript para o Next.js serão gerados utilizando a Supabase CLI (ex: `npx supabase gen types typescript --local > types/supabase.ts`).
 
-generator client {
-  provider = "prisma-client-js"
-}
+```sql
+-- Exemplo de esquema base (supabase/migrations/00001_initial_schema.sql)
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+CREATE TABLE "Session" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  "status" TEXT DEFAULT 'onboarding',
+  "squad" TEXT NOT NULL,
+  "functionalityType" TEXT NOT NULL,
+  "currentPain" TEXT NOT NULL
+);
 
-model Session {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status    String   @default("onboarding")
+CREATE TABLE "Message" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  "sessionId" UUID NOT NULL REFERENCES "Session"("id") ON DELETE CASCADE,
+  "role" TEXT NOT NULL,
+  "content" TEXT NOT NULL,
+  "type" TEXT,
+  "metadata" JSONB
+);
 
-  squad             String
-  functionalityType String
-  currentPain       String
+CREATE TABLE "UserStory" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  "sessionId" UUID NOT NULL REFERENCES "Session"("id") ON DELETE CASCADE,
+  "messageId" UUID UNIQUE NOT NULL REFERENCES "Message"("id") ON DELETE CASCADE,
+  "persona" TEXT NOT NULL,
+  "action" TEXT NOT NULL,
+  "benefit" TEXT NOT NULL,
+  "criteria" JSONB NOT NULL,
+  "lintResult" JSONB,
+  "linearIssueId" TEXT,
+  "linearIssueUrl" TEXT
+);
 
-  messages   Message[]
-  userStories UserStory[]
-  feedbacks  Feedback[]
-}
-
-model Message {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  sessionId String
-  role      String   // 'user' | 'assistant'
-  content   String
-  type      String?  // MessageType
-  metadata  Json?
-
-  session   Session  @relation(fields: [sessionId], references: [id])
-  feedback  Feedback?
-  userStory UserStory?
-}
-
-model UserStory {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  sessionId String
-  messageId String   @unique
-
-  persona  String
-  action   String
-  benefit  String
-  criteria Json     // AcceptanceCriterion[]
-  lintResult Json?  // LintResult
-
-  session Session @relation(fields: [sessionId], references: [id])
-  message Message @relation(fields: [messageId], references: [id])
-}
-
-model Feedback {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  sessionId String
-  messageId String   @unique
-
-  vote   String   // 'up' | 'down'
-  reason String?  // FeedbackReason
-
-  session Session @relation(fields: [sessionId], references: [id])
-  message Message @relation(fields: [messageId], references: [id])
-}
+CREATE TABLE "Feedback" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  "sessionId" UUID NOT NULL REFERENCES "Session"("id") ON DELETE CASCADE,
+  "messageId" UUID UNIQUE NOT NULL REFERENCES "Message"("id") ON DELETE CASCADE,
+  "vote" TEXT NOT NULL,
+  "reason" TEXT
+);
 ```
