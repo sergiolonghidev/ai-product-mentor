@@ -1,0 +1,38 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: aipm-tls
+  namespace: aipm
+spec:
+  secretName: aipm-tls
+  issuerRef:
+    name: lab-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    - aipm.mvvalvulas.com.br
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aipm
+  namespace: aipm
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+spec:
+  ingressClassName: traefik-ext
+  rules:
+    - host: aipm.mvvalvulas.com.br
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aipm
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - aipm.mvvalvulas.com.br
+      secretName: aipm-tls

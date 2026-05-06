@@ -1,11 +1,10 @@
 import { GoogleGenAI } from '@google/genai'
 
-if (!process.env.Google Gemini_API_KEY) {
-  throw new Error('Google Gemini_API_KEY is not set')
+if (!process.env.GEMINI_API_KEY) {
+  throw new Error('GEMINI_API_KEY is not set')
 }
 
-// Inicializa o SDK
-export const ai = new GoogleGenAI({ apiKey: process.env.Google Gemini_API_KEY })
+export const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 
 // Timeout helper para chamadas
 export const withTimeout = <T>(promise: Promise<T>, ms: number = 30000): Promise<T> => {

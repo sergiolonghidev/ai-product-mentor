@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aipm
+  namespace: aipm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aipm
+  template:
+    metadata:
+      labels:
+        app: aipm
+    spec:
+      nodeSelector:
+        nodepool: workload
+      containers:
+        - name: aipm
+          image: harbor.lab/library/aipm:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aipm-secrets
+                  key: GEMINI_API_KEY
+            - name: SUPABASE_SERVICE_ROLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aipm-secrets
+                  key: SUPABASE_SERVICE_ROLE_KEY
+            - name: NODE_ENV
+              value: "production"
+            - name: ENABLE_LINT
+              value: "true"
+            - name: ENABLE_STREAMING
+              value: "true"
+            - name: LINT_MAX_RED_RISKS
+              value: "2"
+            - name: LLM_TIMEOUT_MS
+              value: "30000"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 30
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aipm
+  namespace: aipm
+spec:
+  selector:
+    app: aipm
+  ports:
+    - port: 3000
+      targetPort: 3000
