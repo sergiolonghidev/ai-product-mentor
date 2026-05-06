@@ -10,9 +10,14 @@
 # Google Gemini
 Google Gemini_API_KEY=AIzaSy...
 
-# Banco de dados (Supabase)
-DATABASE_URL=postgresql://...
-DIRECT_URL=postgresql://...     # para migrações Prisma
+# Banco de dados (Supabase local rodando via CLI/Docker)
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
+
+# Integração Linear (Exportação de User Stories)
+LINEAR_API_KEY=lin_api_...
+LINEAR_TEAM_ID=...              # UUID do time Agrotec-fintech
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -43,13 +48,17 @@ npm run dev
 
 ---
 
-## Deploy (Vercel)
+## Deploy (Kubernetes Local)
 
 ```bash
-# Deploy automático via GitHub Actions em push para main
-# Variáveis de ambiente configuradas no dashboard Vercel
+# Aplicação empacotada via Docker e implantada em cluster Kubernetes local.
+# O banco de dados (Supabase) também roda como serviços no mesmo cluster.
 
-vercel --prod                   # deploy manual se necessário
+# Para build da imagem Docker
+docker build -t ai-project-mentor .
+
+# Para aplicar os manifestos no Kubernetes
+kubectl apply -f k8s/
 ```
 
 ---
@@ -69,8 +78,8 @@ vercel --prod                   # deploy manual se necessário
 ## Monitoramento MVP
 
 Para o Alpha, monitoramento mínimo via:
-- **Vercel Analytics** — tempo de resposta das API Routes
-- **Supabase Dashboard** — volume de feedbacks e sessões
+- **Kubernetes Logs** — monitoramento de saída dos pods (Next.js e Supabase)
+- **Supabase Local Studio** — volume de feedbacks e sessões (http://localhost:54323)
 - **Log manual** — todos os erros `LLM_UNAVAILABLE` são logados com timestamp
 
 Pós-MVP: integrar Sentry para error tracking e Posthog para analytics de produto.

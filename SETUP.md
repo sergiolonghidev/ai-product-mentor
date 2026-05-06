@@ -13,14 +13,15 @@
 | npm | 10.x | `npm --version` |
 | Git | 2.x | `git --version` |
 | Conta Google Gemini | API key ativa | console.Google Gemini.com |
-| Conta Supabase | Projeto criado | supabase.com |
+| Docker e Kubernetes | Instalados localmente | `docker --version`, `kubectl version` |
+| Conta Linear.app | API key (Personal) ativa | linear.app/settings/api |
 
 ---
 
 ## 1. Clonar e instalar
 
 ```bash
-git clone https://github.com/seu-org/ai-project-mentor.git
+git clonehttps://github.com/sergiolonghidev/ai-product-mentor.git
 cd ai-project-mentor
 npm install
 ```
@@ -39,9 +40,14 @@ Edite `.env.local` com seus valores:
 # Google Gemini — obter em console.Google Gemini.com/settings/api-keys
 Google Gemini_API_KEY=AIzaSyapi03-...
 
-# Supabase — obter em Settings > Database > Connection string
-DATABASE_URL=postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
-DIRECT_URL=postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
+# Supabase — Banco Local rodando via CLI/Docker
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
+
+# Integração Linear
+LINEAR_API_KEY=lin_api_...
+LINEAR_TEAM_ID=...              # Obter o UUID do time Agrotec-fintech via GraphQL Explorer ou URL
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -61,17 +67,22 @@ LLM_TIMEOUT_MS=30000
 ## 3. Configurar o banco de dados
 
 ```bash
-# Gera o Prisma Client baseado no schema
-npx prisma generate
+# Inicializa o projeto local do Supabase (se ainda não existir a pasta supabase/)
+npx supabase init
 
-# Cria as tabelas no Supabase
-npx prisma db push
+# Sobe os containers locais do Supabase (DB, Auth, Studio, Storage)
+npx supabase start
 
-# (Opcional) Abre o Prisma Studio para visualizar os dados
-npx prisma studio
+# Para criar novas tabelas ou alterar o banco, sempre utilize o comando:
+# npx supabase migration new nome_da_migracao
+
+# As migrações da pasta supabase/migrations serão aplicadas automaticamente no start.
+
+# Gera os tipos TypeScript baseados no banco de dados local para uso do @supabase/supabase-js
+npx supabase gen types typescript --local > types/supabase.ts
 ```
 
-Verifique no dashboard do Supabase que as 4 tabelas foram criadas:
+Verifique no **Supabase Studio Local** (http://localhost:54323) que as 4 tabelas foram criadas:
 - `Session`
 - `Message`
 - `UserStory`
@@ -144,7 +155,7 @@ npm run build
 ## Estrutura de branches
 
 ```
-main          ← produção (deploy automático na Vercel)
+main          ← produção (deploy para cluster Kubernetes)
   └── dev     ← integração (PRs vão para cá)
         └── feature/[nome-da-feature]
         └── fix/[nome-do-bug]
@@ -172,16 +183,15 @@ curl -X POST http://localhost:3000/api/session/start \
 ```
 
 ### Visualizar banco localmente
+O Supabase Studio sobe automaticamente no comando `npx supabase start`.
 ```bash
-npx prisma studio
-# Abre em http://localhost:5555
+# Abre em http://localhost:54323
 ```
 
 ### Reset do banco (em dev)
 ```bash
-# CUIDADO: apaga todos os dados
-npx prisma db push --force-reset
-npx ts-node prisma/seed.ts
+# CUIDADO: apaga todos os dados e roda o supabase/seed.sql
+npx supabase db reset
 ```
 
 ---
@@ -192,7 +202,7 @@ npx ts-node prisma/seed.ts
 |----------|----------------|---------|
 | `Error: Google Gemini_API_KEY is not set` | .env.local não configurado | Verificar passo 2 |
 | `Error: Can't reach database server` | DATABASE_URL incorreta | Verificar connection string no Supabase |
-| `PrismaClientInitializationError` | Prisma Client não gerado | Rodar `npx prisma generate` |
+| `Property does not exist on type Database` | Tipos do Supabase desatualizados | Rodar `npx supabase gen types typescript --local > types/supabase.ts` |
 | Streaming não aparece no browser | ENABLE_STREAMING=false | Verificar .env.local |
 | Linter retorna erro sempre | LLM_TIMEOUT_MS muito baixo | Aumentar para 30000 |
 | `Module not found: lib/prompts/...` | Alias de path não configurado | Verificar `tsconfig.json` paths |
