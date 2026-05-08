@@ -5,7 +5,6 @@ import { formatStoryAsIssue } from '@/lib/linear/formatter'
 import { db as supabase } from '@/lib/supabase/server'
 import { AcceptanceCriterion } from '@/types'
 
-const TEAM_ID = process.env.LINEAR_TEAM_ID!
 const COMPLIANCE_LABEL_NAME = 'compliance'
 
 export async function POST(req: NextRequest) {
@@ -20,7 +19,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { storyId } = parsed.data
+    const { storyId, sessionId } = parsed.data
 
     if (!process.env.LINEAR_API_KEY || !process.env.LINEAR_TEAM_ID) {
       return NextResponse.json(
@@ -29,10 +28,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const TEAM_ID = process.env.LINEAR_TEAM_ID
+
     const { data: story, error: storyError } = await supabase
       .from('UserStory')
       .select()
       .eq('id', storyId)
+      .eq('sessionId', sessionId)
       .single()
 
     if (storyError || !story) {
@@ -96,10 +98,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    await supabase
+    const { error: updateError } = await supabase
       .from('UserStory')
       .update({ linearIssueId: issue.id, linearIssueUrl: issue.url })
       .eq('id', storyId)
+    if (updateError) {
+      console.error('Failed to persist Linear issue ID:', updateError)
+    }
 
     return NextResponse.json(
       {
