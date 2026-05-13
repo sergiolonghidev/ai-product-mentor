@@ -34,3 +34,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.superpowers/
+
+# screenshots / browser automation artifacts
+*.png
+*.jpg
+*.jpeg
+.playwright-mcp/
