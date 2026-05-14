@@ -1,1 +1,4 @@
 npm test
+
+# Block commits that contain secrets
+gitleaks protect --staged --redact
