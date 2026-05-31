@@ -41,6 +41,31 @@ const AcceptanceCriterionSchema = z.object({
   category: z.enum(['functional', 'compliance', 'ux', 'performance']),
 })
 
+// Handoff
+const HandoffIssueSchema = z.object({
+  storyId: z.string(),
+  title: z.string().min(1),
+  description: z.string(),
+  isSpike: z.boolean(),
+  removed: z.boolean(),
+})
+
+const EpicSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  type: z.enum(['development', 'compliance', 'spike', 'custom']),
+  issues: z.array(HandoffIssueSchema),
+})
+
+export const HandoffPlanSchema = z.object({
+  sessionId: z.string().uuid(),
+})
+
+export const HandoffExportSchema = z.object({
+  sessionId: z.string().uuid(),
+  epics: z.array(EpicSchema).min(1),
+})
+
 export const UpdateStorySchema = z.object({
   sessionId: z.string().uuid(),
   persona: z.string().min(1).max(500).optional(),

@@ -133,15 +133,23 @@ export default function ChatPage() {
             <p className="text-xs text-white/40">{context.squad}</p>
           )}
         </div>
-        <button
-          onClick={() => {
-            useSessionStore.getState().clearSession()
-            router.push('/onboarding')
-          }}
-          className="text-xs text-white/30 hover:text-white/60 transition-colors"
-        >
-          Nova sessão
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push('/handoff')}
+            className="text-xs text-violet-400 hover:text-violet-300 border border-violet-500/30 rounded-lg px-3 py-1.5 transition-colors"
+          >
+            Preparar Handoff
+          </button>
+          <button
+            onClick={() => {
+              useSessionStore.getState().clearSession()
+              router.push('/onboarding')
+            }}
+            className="text-xs text-white/30 hover:text-white/60 transition-colors"
+          >
+            Nova sessão
+          </button>
+        </div>
       </header>
 
       <ChatWindow
