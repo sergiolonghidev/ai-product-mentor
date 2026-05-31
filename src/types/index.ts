@@ -100,6 +100,40 @@ export type UserStory = {
   linearIssueUrl?: string
 }
 
+export type PRDCriterion = {
+  id: string
+  description: string
+  category: 'functional' | 'compliance' | 'ux' | 'performance'
+}
+
+export type RegulatoryRestriction = {
+  id: string
+  normative: string
+  requirement: string
+  impact: string
+  level: 'blocker' | 'attention' | 'info'
+}
+
+export type PRD = {
+  id: string
+  createdAt: string
+  editedAt?: string
+  sessionId?: string
+  squad: string
+  phase: 'discovery' | 'ready_to_build' | 'post_launch'
+  title: string
+  context: string
+  problem: string
+  impactedUsers: string
+  solution: string
+  acceptanceCriteria: PRDCriterion[]
+  regulatoryRestrictions: RegulatoryRestriction[]
+  metrics: string
+  dependencies: string
+  risks: string
+  linearExportUrl?: string
+}
+
 export type FeedbackReason =
   | 'too_generic'
   | 'wrong_context'

@@ -77,6 +77,45 @@ export const UpdateStorySchema = z.object({
   { message: 'Ao menos um campo de conteúdo é obrigatório' }
 )
 
+// PRD
+export const GeneratePRDSchema = z.object({
+  squad: z.string().min(1).max(200),
+  phase: z.enum(['discovery', 'ready_to_build', 'post_launch']),
+  input: z.string().min(10).max(4000),
+  sessionId: z.string().uuid().optional(),
+})
+
+const PRDCriterionSchema = z.object({
+  id: z.string().min(1),
+  description: z.string().min(1),
+  category: z.enum(['functional', 'compliance', 'ux', 'performance']),
+})
+
+const RegulatoryRestrictionSchema = z.object({
+  id: z.string().min(1),
+  normative: z.string().min(1),
+  requirement: z.string().min(1),
+  impact: z.string().min(1),
+  level: z.enum(['blocker', 'attention', 'info']),
+})
+
+export const UpdatePRDSchema = z.object({
+  sessionId: z.string().uuid().optional(),
+  title: z.string().min(1).max(300).optional(),
+  context: z.string().min(1).optional(),
+  problem: z.string().min(1).optional(),
+  impactedUsers: z.string().min(1).optional(),
+  solution: z.string().min(1).optional(),
+  acceptanceCriteria: z.array(PRDCriterionSchema).optional(),
+  regulatoryRestrictions: z.array(RegulatoryRestrictionSchema).optional(),
+  metrics: z.string().optional(),
+  dependencies: z.string().optional(),
+  risks: z.string().optional(),
+}).refine(
+  (d) => Object.entries(d).some(([k, v]) => k !== 'sessionId' && v !== undefined),
+  { message: 'Ao menos um campo de conteúdo é obrigatório' }
+)
+
 export const SubmitFeedbackSchema = z.object({
   sessionId: z.string().uuid(),
   messageId: z.string().uuid(),

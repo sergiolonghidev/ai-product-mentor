@@ -12,7 +12,8 @@ const JOBS = [
     icon: '📄',
     title: 'Escrever PRD',
     description: 'Documente features com contexto regulatório e critérios de descoberta',
-    status: 'soon' as const,
+    status: 'active' as const,
+    href: '/prd/onboarding',
   },
   {
     icon: '🗺️',
