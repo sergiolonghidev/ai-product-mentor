@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Message, UserStory, LintResult } from '@/types'
 import { StoryBlock } from '@/components/story/StoryBlock'
 import { LinterPanel } from '@/components/story/LinterPanel'
@@ -47,7 +47,7 @@ export function MessageBubble({ message, sessionId, onRefinement }: Props) {
     }
   }, [message.id, message.content, message.createdAt, isStory, sessionId])
 
-  const runLinter = async (storyId: string) => {
+  const runLinter = useCallback(async (storyId: string) => {
     setLintLoading(true)
     try {
       const res = await fetch('/api/story/lint', {
@@ -62,7 +62,17 @@ export function MessageBubble({ message, sessionId, onRefinement }: Props) {
     } finally {
       setLintLoading(false)
     }
-  }
+  }, [sessionId])
+
+  const handleStoryUpdate = useCallback(
+    (updated: Pick<UserStory, 'persona' | 'action' | 'benefit' | 'acceptanceCriteria'>) => {
+      setStoryData((prev) =>
+        prev ? { ...prev, ...updated } : prev
+      )
+      setLintResult(null)
+    },
+    []
+  )
 
   const displayContent = isStory && storyData ? null : message.content
 
@@ -89,6 +99,12 @@ export function MessageBubble({ message, sessionId, onRefinement }: Props) {
               story={storyData}
               storyId={message.metadata?.storyId}
               sessionId={sessionId}
+              onUpdate={handleStoryUpdate}
+              onRequestLint={
+                message.metadata?.storyId
+                  ? () => runLinter(message.metadata!.storyId!)
+                  : undefined
+              }
             />
             {!lintResult && !lintLoading && message.metadata?.storyId && (
               <button

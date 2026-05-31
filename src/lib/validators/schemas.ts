@@ -35,6 +35,23 @@ export const ExportStorySchema = z.object({
   sessionId: z.string().uuid(),
 })
 
+const AcceptanceCriterionSchema = z.object({
+  id: z.string().min(1),
+  description: z.string().min(1).max(500),
+  category: z.enum(['functional', 'compliance', 'ux', 'performance']),
+})
+
+export const UpdateStorySchema = z.object({
+  sessionId: z.string().uuid(),
+  persona: z.string().min(1).max(500).optional(),
+  action: z.string().min(1).max(500).optional(),
+  benefit: z.string().min(1).max(500).optional(),
+  acceptanceCriteria: z.array(AcceptanceCriterionSchema).min(1).optional(),
+}).refine(
+  (d) => d.persona !== undefined || d.action !== undefined || d.benefit !== undefined || d.acceptanceCriteria !== undefined,
+  { message: 'Ao menos um campo de conteúdo é obrigatório' }
+)
+
 export const SubmitFeedbackSchema = z.object({
   sessionId: z.string().uuid(),
   messageId: z.string().uuid(),

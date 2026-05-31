@@ -53,6 +53,10 @@ Regras:
 - Pelo menos 1 critério de categoria "compliance" quando aplicável ao tipo ${functionalityLabels[context.functionalityType]}
 - A persona deve ser específica ao squad (não use "usuário genérico")
 - Os critérios de compliance devem mencionar o aspecto regulatório específico
+- "persona" DEVE começar exatamente com "Como " — sem exceção
+- "action" DEVE começar exatamente com "Quero " — sem exceção
+- "benefit" DEVE começar exatamente com "Para que " ou "Para " — sem exceção
+- Critérios de aceite NUNCA podem conter linguagem genérica como "funcionar corretamente", "estar disponível", "deve funcionar" ou "funcione corretamente". Cada critério deve especificar condição, ação e resultado verificável
 - Retorne APENAS o JSON válido, sem markdown, sem explicações
 
 `.trim()
