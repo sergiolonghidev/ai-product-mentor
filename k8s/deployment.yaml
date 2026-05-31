@@ -17,7 +17,7 @@ spec:
         nodepool: workload
       containers:
         - name: aipm
-          image: harbor.lab/library/aipm:v2-1979c9e
+          image: harbor.lab/library/aipm:v2-aae080a
           ports:
             - containerPort: 3000
           env:
