@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "AI Product Mentor",
-  description: "Mentor de Produto com compliance regulatório para fintechs",
+  title: "ProdPilot AI",
+  description: "Copiloto de produto com compliance regulatório para fintechs",
 };
 
 export default function RootLayout({

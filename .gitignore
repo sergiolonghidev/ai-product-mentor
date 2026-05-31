@@ -41,3 +41,6 @@ next-env.d.ts
 *.jpg
 *.jpeg
 .playwright-mcp/
+aipm-v1.0.0-mvp-20260530.dump
+backups/*.json
+backups/*.dump

@@ -6,10 +6,10 @@ export default function OnboardingPage() {
       <div className="w-full max-w-lg">
         <div className="mb-10 text-center">
           <h1 className="text-2xl font-bold text-white tracking-tight mb-2">
-            AI Product Mentor
+            ProdPilot AI
           </h1>
           <p className="text-white/50 text-sm">
-            Mentor de produto com compliance regulatório para fintechs
+            Copiloto de produto com compliance regulatório para fintechs
           </p>
         </div>
         <OnboardingWizard />

@@ -128,7 +128,7 @@ export default function ChatPage() {
     <div className="h-screen bg-gray-950 flex flex-col">
       <header className="flex items-center justify-between px-4 py-3 border-b border-white/10">
         <div>
-          <h1 className="text-sm font-semibold text-white">AI Product Mentor</h1>
+          <h1 className="text-sm font-semibold text-white">ProdPilot AI</h1>
           {context && (
             <p className="text-xs text-white/40">{context.squad}</p>
           )}

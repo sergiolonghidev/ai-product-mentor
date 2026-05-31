@@ -172,6 +172,74 @@ type FeedbackReason =
 
 ---
 
+---
+
+### Epic (Handoff Planner — client-side only no V2)
+
+Agrupamento de issues para o handoff ao Linear. Não persiste no banco no V2 — vive em estado
+do cliente durante o Handoff Planner. No Linear, vira um `Project`.
+
+```typescript
+type Epic = {
+  id: string
+  name: string
+  type: 'development' | 'compliance' | 'spike' | 'custom'
+  issues: HandoffIssue[]
+}
+
+type HandoffIssue = {
+  storyId: string
+  title: string
+  description: string
+  isSpike: boolean
+  removed: boolean
+}
+```
+
+---
+
+### PRD
+
+Documento gerado pelo Job "Escrever PRD" (EC-01).
+
+```typescript
+type PRD = {
+  id: string
+  createdAt: Date
+  editedAt?: Date
+  sessionId?: string
+  squad: string
+  phase: 'discovery' | 'ready_to_build' | 'post_launch'
+  title: string
+  context: string
+  problem: string
+  impactedUsers: string
+  solution: string
+  acceptanceCriteria: PRDCriterion[]
+  regulatoryRestrictions: RegulatoryRestriction[]
+  metrics: string
+  dependencies: string
+  risks: string
+  linearExportUrl?: string
+}
+
+type PRDCriterion = {
+  id: string
+  description: string
+  category: 'functional' | 'compliance' | 'ux' | 'performance'
+}
+
+type RegulatoryRestriction = {
+  id: string
+  normative: string
+  requirement: string
+  impact: string
+  level: 'blocker' | 'attention' | 'info'
+}
+```
+
+---
+
 ## Schemas de Validação (Zod)
 
 ```typescript
@@ -220,6 +288,82 @@ export const SubmitFeedbackSchema = z.object({
 }).refine(
   (data) => data.vote === 'up' || data.reason !== undefined,
   { message: 'reason é obrigatório quando vote é "down"', path: ['reason'] }
+)
+
+// V2 — Story Editor
+export const UpdateStorySchema = z.object({
+  sessionId: z.string().uuid(),
+  persona: z.string().min(1).max(500).optional(),
+  action: z.string().min(1).max(500).optional(),
+  benefit: z.string().min(1).max(500).optional(),
+  acceptanceCriteria: z.array(z.object({
+    id: z.string(),
+    description: z.string().min(1).max(500),
+    category: z.enum(['functional', 'compliance', 'ux', 'performance']),
+  })).min(1).optional(),
+}).refine(
+  (d) => d.persona || d.action || d.benefit || d.acceptanceCriteria,
+  { message: 'Ao menos um campo de conteúdo é obrigatório' }
+)
+
+// V2 — Handoff Planner
+export const HandoffPlanSchema = z.object({
+  sessionId: z.string().uuid(),
+})
+
+const HandoffIssueSchema = z.object({
+  storyId: z.string().uuid(),
+  title: z.string().min(1),
+  description: z.string(),
+  isSpike: z.boolean(),
+  removed: z.boolean(),
+})
+
+const EpicSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1),
+  type: z.enum(['development', 'compliance', 'spike', 'custom']),
+  issues: z.array(HandoffIssueSchema),
+})
+
+export const HandoffExportSchema = z.object({
+  sessionId: z.string().uuid(),
+  epics: z.array(EpicSchema).min(1),
+})
+
+// V2 — PRD Generation
+export const GeneratePRDSchema = z.object({
+  squad: z.string().min(1).max(200),
+  phase: z.enum(['discovery', 'ready_to_build', 'post_launch']),
+  input: z.string().min(10).max(4000),
+  sessionId: z.string().uuid().optional(),
+})
+
+export const UpdatePRDSchema = z.object({
+  sessionId: z.string().uuid().optional(),
+  title: z.string().min(1).max(300).optional(),
+  context: z.string().min(1).optional(),
+  problem: z.string().min(1).optional(),
+  impactedUsers: z.string().min(1).optional(),
+  solution: z.string().min(1).optional(),
+  acceptanceCriteria: z.array(z.object({
+    id: z.string(),
+    description: z.string().min(1),
+    category: z.enum(['functional', 'compliance', 'ux', 'performance']),
+  })).optional(),
+  regulatoryRestrictions: z.array(z.object({
+    id: z.string(),
+    normative: z.string().min(1),
+    requirement: z.string().min(1),
+    impact: z.string().min(1),
+    level: z.enum(['blocker', 'attention', 'info']),
+  })).optional(),
+  metrics: z.string().optional(),
+  dependencies: z.string().optional(),
+  risks: z.string().optional(),
+}).refine(
+  (d) => Object.keys(d).filter(k => k !== 'sessionId').some(k => (d as Record<string, unknown>)[k] !== undefined),
+  { message: 'Ao menos um campo de conteúdo é obrigatório' }
 )
 ```
 

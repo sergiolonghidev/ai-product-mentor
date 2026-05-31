@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-AI Product Mentor — a web app for PMs at fintechs to get regulatory-compliant guidance, generate User Stories with compliance linting, and capture feedback. Built with **Spec-Driven Development**: spec must exist before any implementation.
+**ProdPilot AI** (formerly AI Product Mentor) — a web app for PMs at fintechs to generate regulatory-compliant User Stories, PRDs, and sync them to Linear. Built with **Spec-Driven Development**: spec must exist before any implementation.
 
 **Specs are the source of truth.** Before touching any feature, read:
 1. `docs/specs/00-foundation/ARCHITECTURE.md`
@@ -30,6 +30,13 @@ To apply migrations:
 ```bash
 npx supabase db reset   # resets local DB and re-runs all migrations
 ```
+
+## Migrations — regra de rollback
+
+Toda migration em `supabase/migrations/` deve ter um arquivo `.down.sql` irmão.
+Exemplo: `20260601000000_add_prd_table.sql` → `20260601000000_add_prd_table.down.sql`
+Antes de qualquer migration em produção: `./scripts/backup-db.sh`
+Rollback completo: ver `docs/ROLLBACK.md`
 
 ## Environment Variables
 

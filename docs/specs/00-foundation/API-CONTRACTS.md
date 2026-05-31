@@ -286,3 +286,178 @@ Retorna o histórico completo de uma sessão.
 | Code | HTTP | Quando |
 |------|------|--------|
 | `SESSION_NOT_FOUND` | 404 | |
+
+---
+
+## PATCH /api/story/:id
+
+Atualiza uma User Story existente (edição inline). Re-executa o linter se o conteúdo mudar.
+
+### Request
+```typescript
+{
+  sessionId: string
+  persona?: string
+  action?: string
+  benefit?: string
+  acceptanceCriteria?: Array<{
+    id: string
+    description: string
+    category: 'functional' | 'compliance' | 'ux' | 'performance'
+  }>
+}
+```
+
+### Response 200
+```typescript
+{
+  story: UserStory
+  lintQueued: boolean
+}
+```
+
+### Errors
+| Code | HTTP | Quando |
+|------|------|--------|
+| `STORY_NOT_FOUND` | 404 | storyId ou sessionId inválidos |
+| `VALIDATION_ERROR` | 400 | Nenhum campo de conteúdo presente |
+
+---
+
+## POST /api/handoff/plan
+
+Gera o plano de épicos a partir das stories não exportadas da sessão.
+
+### Request
+```typescript
+{ sessionId: string }
+```
+
+### Response 200
+```typescript
+{
+  epics: Array<{
+    id: string
+    name: string
+    type: 'development' | 'compliance' | 'spike' | 'custom'
+    issues: Array<{
+      storyId: string
+      title: string
+      description: string
+      isSpike: boolean
+      removed: boolean
+    }>
+  }>
+  analyticsAlert: boolean
+}
+```
+
+### Errors
+| Code | HTTP | Quando |
+|------|------|--------|
+| `SESSION_NOT_FOUND` | 404 | |
+| `NO_STORIES` | 422 | Sessão não tem stories não exportadas |
+
+---
+
+## POST /api/handoff/export
+
+Executa o export bulk ao Linear com o plano aprovado pelo PM.
+
+### Request
+```typescript
+{
+  sessionId: string
+  epics: Epic[]
+}
+```
+
+### Response 200
+```typescript
+{
+  exported: Array<{
+    epicId: string
+    epicName: string
+    linearProjectId?: string
+    issues: Array<{
+      storyId: string
+      issueId: string
+      issueUrl: string
+    }>
+  }>
+  errors: Array<{
+    storyId: string
+    error: string
+  }>
+}
+```
+
+### Errors
+| Code | HTTP | Quando |
+|------|------|--------|
+| `SESSION_NOT_FOUND` | 404 | |
+| `LINEAR_NOT_CONFIGURED` | 503 | Env vars ausentes |
+| `VALIDATION_ERROR` | 400 | Plano inválido |
+
+---
+
+## POST /api/prd/generate
+
+Gera um PRD estruturado a partir de descrição ou ata. **Stream SSE.**
+
+### Request
+```typescript
+{
+  squad: string
+  phase: 'discovery' | 'ready_to_build' | 'post_launch'
+  input: string
+  sessionId?: string
+}
+```
+
+### Response 200 — Stream SSE
+```
+event: chunk        → {"text": "..."}
+event: prd_complete → {"prdId": "uuid", "prd": PRD}
+event: done         → {}
+```
+
+### Errors
+| Code | HTTP | Quando |
+|------|------|--------|
+| `VALIDATION_ERROR` | 400 | |
+| `LLM_UNAVAILABLE` | 503 | |
+
+---
+
+## PATCH /api/prd/:id
+
+Atualiza seções de um PRD existente (edição inline por seção).
+
+### Request (qualquer subset)
+```typescript
+{
+  sessionId?: string
+  title?: string
+  context?: string
+  problem?: string
+  impactedUsers?: string
+  solution?: string
+  acceptanceCriteria?: PRDCriterion[]
+  regulatoryRestrictions?: RegulatoryRestriction[]
+  metrics?: string
+  dependencies?: string
+  risks?: string
+}
+```
+
+### Response 200
+```typescript
+{ prd: PRD }
+```
+
+### Errors
+| Code | HTTP | Quando |
+|------|------|--------|
+| `PRD_NOT_FOUND` | 404 | |
+| `VALIDATION_ERROR` | 400 | Nenhum campo presente |

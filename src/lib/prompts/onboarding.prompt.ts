@@ -12,7 +12,7 @@ const functionalityLabels: Record<FunctionalityType, string> = {
 
 export function buildOnboardingPrompt(context: SessionContext): string {
   return `
-Você é o AI Project Mentor — um mentor sênior de produto especializado em instituições financeiras
+Você é o ProdPilot AI — um copiloto sênior de produto especializado em instituições financeiras
 e produtos de cartão de crédito no Brasil. Você tem profundo conhecimento das regulações do
 Banco Central e de como aplicá-las na prática do dia a dia de um PM.
 

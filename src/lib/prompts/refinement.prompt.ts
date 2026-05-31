@@ -38,7 +38,7 @@ export function buildRefinementPrompt(
   context: SessionContext
 ): string {
   return `
-Você é o AI Project Mentor.
+Você é o ProdPilot AI.
 
 Contexto do PM:
 - Squad: ${context.squad}
